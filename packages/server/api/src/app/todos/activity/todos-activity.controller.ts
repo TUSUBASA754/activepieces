@@ -61,6 +61,6 @@ const CreateTodoCommentRequest = {
         body: CreateTodoActivityRequestBody,
     },
     config: {
-        allowedPrincipals: [PrincipalType.USER],
+        allowedPrincipals: [PrincipalType.USER, PrincipalType.ENGINE],
     },
 }

@@ -50,37 +50,6 @@ export const mcpService = (_log: FastifyBaseLogger) => ({
     async getMcpTool(toolId: ApId): Promise<McpTool> {
         return mcpToolRepo().findOneOrFail({ where: { id: toolId } })
     },
-    async getMcpToolMetadata({ toolName, projectId, platformId }: GetMcpToolMetadataParams): Promise<McpToolMetadata> {
-        const toolId = mcpToolNaming.extractToolId(toolName)
-        const mcpTool = await this.getMcpTool(toolId)
-        switch (mcpTool.type) {
-            case McpToolType.PIECE: {
-                const pieceMetadataTool = mcpTool.pieceMetadata
-                assertNotNullOrUndefined(pieceMetadataTool, 'pieceMetadataTool is required')
-                const pieceMetadata = await pieceMetadataService(_log).getOrThrow({ name: pieceMetadataTool.pieceName, projectId, version: pieceMetadataTool.pieceVersion, platformId })
-                const actionMetadataEntry = Object.entries(pieceMetadata.actions).find(([_, action]) => mcpToolNaming.fixTool(action.displayName, toolId, McpToolType.PIECE) === toolName)
-                assertNotNullOrUndefined(actionMetadataEntry, 'actionMetadataEntry is required')
-                const actionMetadata = actionMetadataEntry[1]
-                return {
-                    displayName: actionMetadata.displayName,
-                    logoUrl: pieceMetadata.logoUrl,
-                }
-            }
-            case McpToolType.FLOW: {
-                const flow = await flowService(_log).getOnePopulatedOrThrow({
-                    id: mcpTool.flowId!,
-                    projectId,
-                })
-                return {
-                    displayName: flow.version.displayName,
-                }
-            }
-        }
-    },
-    async getMcpServerUrl({ mcpId }: GetMcpServerUrlParams): Promise<string> {
-        const mcp = await mcpRepo().findOneOrFail({ where: { id: mcpId } })
-        return domainHelper.getPublicApiUrl({ path: `/v1/mcp/${mcp.token}/sse` })
-    },
 
     async deleteFlowTool({ flowId }: DeleteFlowToolsParams): Promise<void> {
         await mcpToolRepo().delete({ flowId })

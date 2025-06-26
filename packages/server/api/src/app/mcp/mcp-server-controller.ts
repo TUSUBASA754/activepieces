@@ -139,7 +139,7 @@ const RotateTokenRequest = {
 
 const GetMcpRequest = {
     config: {
-        allowedPrincipals: [PrincipalType.USER],
+        allowedPrincipals: [PrincipalType.USER, PrincipalType.ENGINE],
         permissions: [Permission.READ_MCP],
     },
     schema: {

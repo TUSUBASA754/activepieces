@@ -40,7 +40,10 @@ export const agentsService = (log: FastifyBaseLogger) => ({
         return enrichAgent(log, agent)
     },
     async update(params: UpdateParams): Promise<Agent> {
-        await agentRepo().update(params.id, {
+        await agentRepo().update({
+            id: params.id,
+            projectId: params.projectId,
+        }, {
             ...spreadIfDefined('displayName', params.displayName),
             ...spreadIfDefined('systemPrompt', params.systemPrompt),
             ...spreadIfDefined('description', params.description),
@@ -48,17 +51,7 @@ export const agentsService = (log: FastifyBaseLogger) => ({
             ...spreadIfDefined('outputType', params.outputType),
             ...spreadIfDefined('outputFields', params.outputFields),
         })
-        return this.getOneOrThrow({ id: params.id })
-    },
-    async run(params: RunParams): Promise<Todo> {
-        const agent = await this.getOneOrThrow({ id: params.id })
-        return agentExecutor(log).execute({
-            agent,
-            userId: params.userId,
-            prompt: params.prompt,
-            socket: params.socket,
-            callbackUrl: params.callbackUrl,
-        })
+        return this.getOneOrThrow({ id: params.id, projectId: params.projectId })
     },
     async getOne(params: GetOneParams): Promise<Agent | null> {
         const agent = await agentRepo().findOneBy({ id: params.id })
@@ -68,7 +61,7 @@ export const agentsService = (log: FastifyBaseLogger) => ({
         return enrichAgent(log, agent)
     },
     async getOneOrThrow(params: GetOneParams): Promise<Agent> {
-        const agent = await this.getOne(params)
+        const agent = await this.getOne({ id: params.id, projectId: params.projectId })
         if (isNil(agent)) {
             throw new ActivepiecesError({
                 code: ErrorCode.ENTITY_NOT_FOUND,
@@ -80,7 +73,7 @@ export const agentsService = (log: FastifyBaseLogger) => ({
         return agent
     },
     async delete(params: DeleteParams): Promise<void> {
-        const agent = await this.getOneOrThrow({ id: params.id })
+        const agent = await this.getOneOrThrow({ id: params.id, projectId: params.projectId })
         await agentRepo().delete({
             id: agent.id,
         })
@@ -162,12 +155,15 @@ type UpdateParams = {
     testPrompt?: string
     outputType?: string
     outputFields?: AgentOutputField[]
+    projectId: string
 }
 
 type GetOneParams = {
     id: string
+    projectId: string
 }
 
 type DeleteParams = {
     id: string
+    projectId: string
 }
