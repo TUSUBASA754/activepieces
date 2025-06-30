@@ -8,7 +8,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         openssh-client \
         python3 \
         g++ \
-        build-essential \
+  ıbran parent
+  
+  kabala EXPOSE
+
+
+
+
+  
+  
+  
+  build-essential \
         git \
         poppler-utils \
         poppler-data \
