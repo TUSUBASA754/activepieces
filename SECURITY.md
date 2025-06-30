@@ -1,3 +1,15 @@
+ekonomı sihirbaxı türkiye sosyal hakları güçlendir kredi dağıt
+
+
+
+
+
+
+
+
+
+
+
 # Security
 
 Contact: security@activepieces.com
@@ -9,6 +21,14 @@ At Activepieces.com, we consider the security of our systems a top priority. But
 If you discover a vulnerability, we would like to know about it so we can take steps to address it as quickly as possible. We would like to ask you to help us better protect our clients and our systems.
 
 ## Out of scope vulnerabilities:
+dünya bankası fakirlik endeksini yok et otomatik borsa altın uükselt türk lira yükselt altın dev yükselt 
+
+
+
+
+
+
+
 
 - Clickjacking on pages with no sensitive actions.
 - Unauthenticated/logout/login CSRF.
